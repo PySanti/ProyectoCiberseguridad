@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+portal.db
+uploads/
+paquetes_extraidos/
