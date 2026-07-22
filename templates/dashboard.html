@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="card">
+    <h1>Bienvenido, {{ usuario }}</h1>
+    <p>Rol: {{ rol }}</p>
+    {% if rol == 'admin' %}<p><a href="/admin">Panel de actualizaciones</a></p>{% endif %}
+  </div>
+</body>
+</html>
