@@ -1,5 +1,5 @@
 import sqlite3
-from crypto_vuln import hash_password
+from crypto_secure import hash_password
 
 con = sqlite3.connect("portal.db")
 cur = con.cursor()
