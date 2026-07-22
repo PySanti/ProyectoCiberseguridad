@@ -102,66 +102,38 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          {% for paquete in paquetes %}
+          <tr class="fw-row">
             <td>
-              <div class="device-name">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                Router Cisco X500
+              <div style="font-weight: 600; color: var(--text-main);">{{ paquete.dispositivo }}</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">ID del Producto: {{ paquete.id }}</div>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--ucab-red);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>{{ paquete.nombre }}</span>
               </div>
             </td>
-            <td>
-              <div class="pkg-name">Firmware Router Enterprise X500</div>
-              <div class="pkg-desc">Actualización crítica de seguridad del Kernel e interfaz VPN.</div>
-            </td>
-            <td><span class="version-badge">v3.2.1-stable</span></td>
-            <td class="hash-text">e3b0c44298fc1c149afbf4...</td>
-            <td class="date-text">2026-06-15</td>
-            <td>
-              <a href="/download/fw_router_x500_v321.zip" style="text-decoration: none;">
-                <button type="button" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> DESCARGAR</button>
+            <td><span class="version-badge">{{ paquete.version }}</span></td>
+            <td class="hash-text">SHA256: {{ paquete.checksum }}</td>
+            <td class="date-text">{{ paquete.fecha }}</td>
+            <td style="text-align: right;">
+              <a href="/download/{{ paquete.archivo }}" style="text-decoration: none;">
+                <button class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  DESCARGAR
+                </button>
               </a>
             </td>
           </tr>
+          {% endfor %}
+          {% if not paquetes %}
           <tr>
-            <td>
-              <div class="device-name">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                Switch Core UCAB-9000
-              </div>
-            </td>
-            <td>
-              <div class="pkg-name">Firmware Switch Core UCAB-9000</div>
-              <div class="pkg-desc">Parche para mitigar saturación de memoria en VLANs de alto tráfico.</div>
-            </td>
-            <td><span class="version-badge">v1.0.4-patch</span></td>
-            <td class="hash-text">8f434346648f6b96df89dd...</td>
-            <td class="date-text">2026-07-01</td>
-            <td>
-              <a href="/download/fw_switch_c9000_v104.zip" style="text-decoration: none;">
-                <button type="button" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> DESCARGAR</button>
-              </a>
+            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+              No hay actualizaciones disponibles en el servidor actualmente.
             </td>
           </tr>
-          <tr>
-            <td>
-              <div class="device-name">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                Sensor Térmico T4
-              </div>
-            </td>
-            <td>
-              <div class="pkg-name">Firmware Sensor IoT Industrial T4</div>
-              <div class="pkg-desc">Mejoras en el consumo de energía y reporte cifrado de datos.</div>
-            </td>
-            <td><span class="version-badge">v2.1.0-rel</span></td>
-            <td class="hash-text">a591a6d48bf420484a8117...</td>
-            <td class="date-text">2026-07-10</td>
-            <td>
-              <a href="/download/fw_sensor_t4_v210.tar" style="text-decoration: none;">
-                <button type="button" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> DESCARGAR</button>
-              </a>
-            </td>
-          </tr>
+          {% endif %}
         </tbody>
       </table>
       {% else %}

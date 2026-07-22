@@ -15,7 +15,12 @@ def index():
             usuario, rol = leer_token(token)
         except:
             pass
-    return render_template("login.html", usuario=usuario, rol=rol)
+            
+    con = get_db()
+    paquetes = con.execute("SELECT * FROM paquetes WHERE eliminado = 0 ORDER BY id DESC").fetchall()
+    con.close()
+    
+    return render_template("login.html", usuario=usuario, rol=rol, paquetes=paquetes)
 
 
 @auth_bp.route("/login", methods=["POST"])
