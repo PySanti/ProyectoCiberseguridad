@@ -7,7 +7,15 @@ auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/", methods=["GET"])
 def index():
-    return render_template("login.html")
+    token = request.cookies.get("session")
+    usuario = None
+    rol = None
+    if token:
+        try:
+            usuario, rol = leer_token(token)
+        except:
+            pass
+    return render_template("login.html", usuario=usuario, rol=rol)
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -27,6 +35,13 @@ def login():
         resp.set_cookie("session", token)
         return resp
     return render_template("login.html", error="Credenciales invalidas")
+
+
+@auth_bp.route("/logout")
+def logout():
+    resp = make_response(redirect("/"))
+    resp.delete_cookie("session")
+    return resp
 
 
 @auth_bp.route("/dashboard")
@@ -54,3 +69,11 @@ def api_config():
         "debug": True,
         "llave_pista": LLAVE_TOKEN.decode()[:4] + "***",
     })
+
+@auth_bp.route("/download/<path:filename>")
+def download_fake(filename):
+    contenido = f"¡Felicidades! Has encontrado un easter egg.\n\nEste archivo '{filename}' es un firmware ficticio para pruebas de ciberseguridad en el portal UCAB HARDWARE."
+    resp = make_response(contenido)
+    resp.headers["Content-Disposition"] = f"attachment; filename={filename}"
+    resp.headers["Content-Type"] = "text/plain"
+    return resp

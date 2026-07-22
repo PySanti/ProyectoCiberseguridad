@@ -2,18 +2,233 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>Portal de Actualizaciones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UCAB HARDWARE - Portal de Ciberseguridad</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div class="card">
-    <h1>Portal de Gestión de Actualizaciones y Firmwares</h1>
-    <form method="post" action="/login">
-      <input name="usuario" placeholder="Usuario">
-      <input name="password" type="password" placeholder="Contraseña">
-      <button>Ingresar</button>
-    </form>
-    {% if error %}<p class="err">{{ error }}</p>{% endif %}
+  <div class="top-bar">
+    <div>
+      <span class="status-dot"></span> RED UCAB 2026 • CIBERSEGURIDAD & FIRMWARES
+    </div>
+    <div>PROT-HTTPS: <span class="active-status">ACTIVO</span></div>
   </div>
+
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><path d="M7 7h10"></path><path d="M7 12h10"></path><path d="M7 17h10"></path></svg>
+      </div>
+      <div class="logo-text">
+        <h1>UCAB HARDWARE <span>v3.5.0</span> <span style="background: var(--ucab-red); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.6rem; vertical-align: middle; margin-left: 8px;">VERSIÓN VULNERABLE</span></h1>
+        <p>PORTAL DE GESTIÓN DE ACTUALIZACIONES Y FIRMWARES</p>
+      </div>
+    </div>
+    
+    <nav class="nav-links">
+      <a href="/" class="active">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        Catálogo / Inicio
+      </a>
+      {% if usuario %}
+      <a href="/dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+        Mi Dashboard
+      </a>
+      {% if rol == 'admin' %}
+      <a href="/admin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        Administración
+      </a>
+      {% endif %}
+      {% endif %}
+    </nav>
+
+    {% if not usuario %}
+    <button class="btn-primary" onclick="document.getElementById('admin-login').scrollIntoView({behavior: 'smooth'})">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+      INICIAR SESIÓN
+    </button>
+    {% else %}
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+        Logueado como <strong style="color: var(--ucab-red); text-transform: uppercase;">{{ rol }}</strong>
+      </span>
+      <a href="/logout" style="text-decoration: none;">
+        <button class="btn-primary" style="background-color: transparent; border: 1px solid var(--ucab-red); color: var(--ucab-red);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          CERRAR SESIÓN
+        </button>
+      </a>
+    </div>
+    {% endif %}
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="hero-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        INFRAESTRUCTURA DE HARDWARE UCAB 2026
+      </div>
+      <h2>CENTRO DE DISTRIBUCIÓN OFICIAL DE FIRMWARES</h2>
+      <p>Descargue imágenes binarias verificadas para dispositivos Cisco, switches UCAB y sensores IoT. Consulte parches de seguridad e inspeccione la implementación oficial de la plataforma.</p>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <div>
+            <h3>Catálogo de Actualizaciones Disponibles</h3>
+            <p>Imágenes de firmware oficiales verificadas para infraestructura CoreOS / UCAB</p>
+          </div>
+        </div>
+        <div class="search-box">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" placeholder="Buscar firmware..." id="searchInput">
+        </div>
+      </div>
+
+      {% if usuario %}
+      <table>
+        <thead>
+          <tr>
+            <th>Dispositivo</th>
+            <th>Nombre / Paquete</th>
+            <th>Versión</th>
+            <th>Checksum SHA-256</th>
+            <th>Fecha</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="device-name">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                Router Cisco X500
+              </div>
+            </td>
+            <td>
+              <div class="pkg-name">Firmware Router Enterprise X500</div>
+              <div class="pkg-desc">Actualización crítica de seguridad del Kernel e interfaz VPN.</div>
+            </td>
+            <td><span class="version-badge">v3.2.1-stable</span></td>
+            <td class="hash-text">e3b0c44298fc1c149afbf4...</td>
+            <td class="date-text">2026-06-15</td>
+            <td>
+              <a href="/download/fw_router_x500_v321.zip" style="text-decoration: none;">
+                <button type="button" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> DESCARGAR</button>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                Switch Core UCAB-9000
+              </div>
+            </td>
+            <td>
+              <div class="pkg-name">Firmware Switch Core UCAB-9000</div>
+              <div class="pkg-desc">Parche para mitigar saturación de memoria en VLANs de alto tráfico.</div>
+            </td>
+            <td><span class="version-badge">v1.0.4-patch</span></td>
+            <td class="hash-text">8f434346648f6b96df89dd...</td>
+            <td class="date-text">2026-07-01</td>
+            <td>
+              <a href="/download/fw_switch_c9000_v104.zip" style="text-decoration: none;">
+                <button type="button" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> DESCARGAR</button>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="device-name">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                Sensor Térmico T4
+              </div>
+            </td>
+            <td>
+              <div class="pkg-name">Firmware Sensor IoT Industrial T4</div>
+              <div class="pkg-desc">Mejoras en el consumo de energía y reporte cifrado de datos.</div>
+            </td>
+            <td><span class="version-badge">v2.1.0-rel</span></td>
+            <td class="hash-text">a591a6d48bf420484a8117...</td>
+            <td class="date-text">2026-07-10</td>
+            <td>
+              <a href="/download/fw_sensor_t4_v210.tar" style="text-decoration: none;">
+                <button type="button" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> DESCARGAR</button>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      {% else %}
+      <div style="padding: 3rem 1rem; text-align: center; color: var(--text-muted);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; opacity: 0.5;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <h4 style="color: var(--text-main); margin-bottom: 0.5rem;">ACCESO RESTRINGIDO</h4>
+        <p>Debe iniciar sesión para visualizar y descargar las actualizaciones del catálogo.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="section-card" id="admin-login">
+      <div class="login-area">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <h3>PANEL DE ADMINISTRACIÓN RESTRINGIDO</h3>
+        
+        {% if usuario %}
+          <p>Has iniciado sesión actualmente como <strong style="color: var(--ucab-red);">{{ usuario }}</strong>.</p>
+          <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+            <a href="/dashboard" class="btn-primary" style="text-decoration: none;">IR AL DASHBOARD</a>
+            {% if rol == 'admin' %}
+            <a href="/admin" class="btn-primary" style="text-decoration: none; background-color: var(--ucab-dark);">PANEL ADMIN</a>
+            {% endif %}
+          </div>
+        {% else %}
+          <p>Inicie sesión como <strong>admin_ucab</strong> con la clave <strong>UCAB_Secret_2026</strong> para desbloquear la consola terminal, subida de archivos e inspección del repositorio local.</p>
+          
+          {% if error %}
+          <div class="alert-error">{{ error }}</div>
+          {% endif %}
+
+          <form method="post" action="/login">
+            <div class="form-group">
+              <input type="text" name="usuario" class="form-control" placeholder="Usuario" required autocomplete="username">
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" class="form-control" placeholder="Contraseña" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem; padding: 1rem;">AUTENTICARSE COMO ADMINISTRADOR</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div><span class="footer-brand">UCAB HARDWARE PORTAL</span> © 2026 Universidad Católica Andrés Bello</div>
+    <div>Portal de Soporte Oficial</div>
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('table tbody tr');
+        
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          if (text.includes(term)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    }
+  </script>
 </body>
 </html>
