@@ -20,7 +20,8 @@ def login():
     if fila and verificar_password(password, fila["password"]):
         token = crear_token(fila["usuario"], fila["rol"])
         resp = make_response(redirect("/dashboard"))
-        # Cookie endurecida: no accesible por JS ni enviable en contextos cruzados.
+        # Guardamos el token en una cookie más protegida: no se puede leer desde
+        # JavaScript ni se envía a otros sitios.
         resp.set_cookie("session", token, httponly=True, samesite="Strict")
         return resp
     return render_template("login.html", error="Credenciales invalidas")
@@ -32,7 +33,8 @@ def dashboard():
     if not token:
         return redirect("/")
     try:
-        usuario, rol = leer_token(token)  # rechaza tokens manipulados
+        # Si el token fue modificado, esto falla y no lo dejamos pasar.
+        usuario, rol = leer_token(token)
     except ValueError:
         return redirect("/")
     return render_template("dashboard.html", usuario=usuario, rol=rol)

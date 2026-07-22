@@ -7,10 +7,9 @@ EXTRACT_DIR = "paquetes_extraidos"
 
 
 def verificar_integridad(datos: bytes, firma_hex: str) -> bool:
-    # Recalcula el HMAC-SHA256 del paquete con el secreto del servidor y lo
-    # compara (en tiempo constante) contra la firma que acompaña al paquete.
-    # Solo quien tiene el secreto pudo generar una firma válida -> corrige
-    # CWE-494 (verificación de integridad antes de procesar).
+    # Aquí comprobamos que el paquete sea de confianza: recalculamos su firma con
+    # el secreto del servidor y la comparamos con la firma que vino con él. Solo
+    # quien tiene el secreto pudo haber hecho una firma válida.
     try:
         esperado = hmac_sha256(SECRETO, datos)
         return comparar_constante(esperado, bytes.fromhex(firma_hex))
@@ -19,7 +18,8 @@ def verificar_integridad(datos: bytes, firma_hex: str) -> bool:
 
 
 def _tipo_real_valido(ruta: str) -> bool:
-    # Valida el tipo REAL por magic bytes, no por la extensión -> corrige CWE-434.
+    # Aquí miramos el contenido real del archivo (sus primeros bytes) para saber
+    # si de verdad es un .zip o un .tar, sin fiarnos del nombre.
     with open(ruta, "rb") as f:
         cabecera = f.read(6)
     es_zip = cabecera[:4] == b"PK\x03\x04"
@@ -30,7 +30,8 @@ def _tipo_real_valido(ruta: str) -> bool:
 
 
 def _ruta_segura(base: str, objetivo: str) -> bool:
-    # Bloquea path traversal: la ruta final debe quedar dentro de base.
+    # Aquí nos aseguramos de que cada archivo del paquete se guarde dentro de la
+    # carpeta prevista y no en otra parte del sistema.
     base_abs = os.path.realpath(base)
     destino = os.path.realpath(objetivo)
     return destino == base_abs or destino.startswith(base_abs + os.sep)
@@ -41,7 +42,8 @@ def procesar_paquete(ruta: str) -> str:
         raise ValueError("Tipo de archivo no válido")
 
     os.makedirs(EXTRACT_DIR, exist_ok=True)
-    # Extracción segura validando cada miembro; NO se ejecuta ningún script.
+    # Descomprimimos revisando cada archivo, y ahora NO ejecutamos nada de lo que
+    # venga adentro.
     if ruta.endswith(".tar"):
         with tarfile.open(ruta) as t:
             for miembro in t.getmembers():

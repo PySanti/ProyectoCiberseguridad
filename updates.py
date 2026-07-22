@@ -35,18 +35,18 @@ def upload_update():
     firma = request.form.get("firma", "")
     datos = archivo.read()
 
-    # 1) Verifica la integridad ANTES de tocar el archivo. Sin firma válida, se
-    #    rechaza y nunca se guarda ni se procesa.
+    # 1) Antes de tocar el archivo, comprobamos su firma. Si no es válida, lo
+    #    rechazamos y no lo guardamos ni lo procesamos.
     if not verificar_integridad(datos, firma):
         return "Integridad inválida: paquete rechazado", 400
 
-    nombre = os.path.basename(archivo.filename)  # evita rutas en el nombre
+    nombre = os.path.basename(archivo.filename)  # nos quedamos solo con el nombre, sin rutas
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     ruta = os.path.join(UPLOAD_DIR, nombre)
     with open(ruta, "wb") as f:
         f.write(datos)
 
-    # 2) Procesa dentro de try/except; cualquier fallo se maneja controladamente.
+    # 2) Lo procesamos con cuidado: si algo falla, se maneja sin romper la app.
     try:
         resultado = procesar_paquete(ruta)
     except ValueError as e:
