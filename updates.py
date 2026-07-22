@@ -12,7 +12,8 @@ def admin():
     token = request.cookies.get("session")
     if not token:
         return redirect("/")
-    # El rol se lee del token reversible del cliente (heredado de A04).
+    # Aquí decidimos si es admin leyendo el rol del token del cliente, que como
+    # vimos se puede falsificar.
     usuario, rol = leer_token(token)
     if rol != "admin":
         return "Acceso denegado", 403
@@ -28,16 +29,16 @@ def upload_update():
 
     archivo = request.files["paquete"]
     nombre = archivo.filename
-    # CWE-434 (Unrestricted Upload of File with Dangerous Type): la única
-    # validación es la extensión del nombre, que el cliente controla por
-    # completo. No se comprueba el tipo real (magic bytes) ni el contenido.
-    # FALTA: validar el tipo real del archivo y verificar su integridad.
+    # Aquí lo único que revisamos es que el nombre termine en .zip o .tar, algo
+    # que el atacante controla fácil. No miramos el contenido real del archivo.
+    # Faltaría revisar de verdad qué tipo de archivo es y si es confiable.
     if not (nombre.endswith(".zip") or nombre.endswith(".tar")):
         return "Formato no permitido", 400
 
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     ruta = os.path.join(UPLOAD_DIR, nombre)
     archivo.save(ruta)
-    # Se procesa (extrae + ejecuta) sin ninguna verificación de integridad.
+    # Aquí lo guardamos y lo procesamos (se descomprime y se ejecuta) sin ninguna
+    # comprobación de que sea seguro.
     resultado = procesar_paquete(ruta)
     return f"Paquete procesado: {resultado}"

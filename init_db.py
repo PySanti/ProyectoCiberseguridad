@@ -11,7 +11,8 @@ CREATE TABLE usuarios (id INTEGER PRIMARY KEY, usuario TEXT UNIQUE, password TEX
 CREATE TABLE paquetes (id INTEGER PRIMARY KEY, nombre TEXT, ruta TEXT, subido_por TEXT);
 CREATE TABLE logs (id INTEGER PRIMARY KEY, evento TEXT);
 """)
-# Passwords guardadas como MD5 sin salt (ver crypto_vuln.hash_password).
+# Aquí creamos dos usuarios de prueba. Sus contraseñas se guardan con MD5, el
+# método inseguro que está arriba en crypto_vuln.
 cur.execute("INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)",
             ("operador", hash_password("operador123"), "user"))
 cur.execute("INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)",

@@ -1,19 +1,17 @@
 import hashlib
 import base64
 
-# CWE-798 (Use of Hard-coded Credentials): la llave del token está escrita
-# directamente en el código fuente. Cualquiera con acceso al repositorio o que
-# obtenga los archivos del servidor la lee. FALTA: cargar el secreto desde una
-# variable de entorno o gestor de secretos, nunca dejarlo en el código.
+# Aquí dejamos la llave secreta escrita directo en el código. Eso es peligroso:
+# cualquiera que pueda ver estos archivos la puede leer. Lo correcto sería
+# guardarla afuera (en una variable del sistema), nunca aquí dentro del código.
 LLAVE_TOKEN = b"S3cr3t0_P0rt4l_2026"
 
 
 def hash_password(password: str) -> str:
-    # CWE-327 (Broken/Risky Crypto Algorithm): MD5 es un algoritmo obsoleto y
-    # roto. Es rapidísimo de calcular -> vulnerable a fuerza bruta y a rainbow
-    # tables. Además NO usa salt, así que dos usuarios con la misma contraseña
-    # producen el mismo hash. FALTA: una función de derivación de clave lenta
-    # con salt por usuario (PBKDF2/Argon2/bcrypt), implementada manualmente.
+    # En esta línea guardamos la contraseña usando MD5, un método viejo y fácil
+    # de romper, que además no le agrega "sal". Por eso es sencillo descubrir la
+    # contraseña real. Lo ideal sería un método más lento y con una sal distinta
+    # para cada usuario.
     return hashlib.md5(password.encode()).hexdigest()
 
 
@@ -22,17 +20,17 @@ def _xor(data: bytes, key: bytes) -> bytes:
 
 
 def crear_token(usuario: str, rol: str) -> str:
-    # CWE-327: el token es REVERSIBLE. Es solo XOR con una llave fija + base64,
-    # sin ninguna firma. El cliente puede descifrarlo, cambiar "user" por
-    # "admin" y volver a cifrarlo. FALTA: firmar el token con HMAC y verificar
-    # esa firma en el servidor, para que el cliente no pueda alterarlo.
+    # Aquí armamos el token mezclando los datos con la llave y codificándolos. El
+    # problema es que esa mezcla se puede deshacer: el usuario podría abrir el
+    # token, cambiar "user" por "admin" y volverlo a armar. Faltaría firmarlo
+    # para que nadie lo pueda modificar sin que nos demos cuenta.
     payload = f"{usuario}|{rol}".encode()
     return base64.b64encode(_xor(payload, LLAVE_TOKEN)).decode()
 
 
 def leer_token(token: str):
-    # No verifica integridad: confía ciegamente en lo que manda el cliente en la
-    # cookie. Lo que venga se decodifica y se usa tal cual.
+    # Aquí leemos el token que manda el cliente y le creemos sin revisar nada.
+    # Lo que venga se abre y se usa tal cual, aunque lo hayan alterado.
     datos = _xor(base64.b64decode(token), LLAVE_TOKEN).decode()
     usuario, rol = datos.split("|")
     return usuario, rol

@@ -17,9 +17,11 @@ def login():
     con = get_db()
     fila = con.execute("SELECT * FROM usuarios WHERE usuario = ?", (usuario,)).fetchone()
     con.close()
-    # Compara el MD5 sin salt de la contraseña recibida contra el almacenado.
+    # Aquí comparamos la contraseña que escribió el usuario (convertida con MD5)
+    # contra la que está guardada.
     if fila and fila["password"] == hash_password(password):
-        # Entrega al cliente un token reversible en una cookie (A04).
+        # Si coincide, le entregamos un token dentro de una cookie. Como ese
+        # token se puede modificar, aquí está el punto débil.
         token = crear_token(fila["usuario"], fila["rol"])
         resp = make_response(redirect("/dashboard"))
         resp.set_cookie("session", token)
@@ -32,17 +34,18 @@ def dashboard():
     token = request.cookies.get("session")
     if not token:
         return redirect("/")
-    # El rol se toma directamente del token del cliente, sin verificar firma.
+    # Aquí tomamos el rol directo del token del cliente, sin comprobar si es de
+    # verdad. Si alguien lo cambió a "admin", le creemos igual.
     usuario, rol = leer_token(token)
     return render_template("dashboard.html", usuario=usuario, rol=rol)
 
 
 @auth_bp.route("/api/config")
 def api_config():
-    # A04 + CWE-200: expone al cliente detalles internos de configuración,
-    # incluyendo el ESQUEMA del token y el algoritmo de hashing, además de una
-    # pista de la llave. Esto le regala al atacante todo lo que necesita para
-    # atacar la criptografía. FALTA: no exponer detalles de seguridad al cliente.
+    # Aquí, por error, le mostramos al cliente cómo funciona la app por dentro:
+    # cómo se arma el token, qué método usa para las contraseñas y una pista de
+    # la llave. Eso le da al atacante justo lo que necesita para atacarnos. No
+    # deberíamos mostrar nada de esto.
     return jsonify({
         "app": "Portal de Gestion de Actualizaciones y Firmwares",
         "version": "1.0",

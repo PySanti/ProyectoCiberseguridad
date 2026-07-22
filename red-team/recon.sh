@@ -1,9 +1,9 @@
 #!/bin/bash
-# MITRE T1595 - Active Scanning. Reemplaza <IP_VICTIMA>.
+# Reconocimiento del objetivo. Reemplaza <IP_VICTIMA> con la IP de la víctima.
 VICTIMA="<IP_VICTIMA>"
 
-# Descubrir puertos y servicios de la VM víctima
+# Revisamos qué puertos y servicios tiene abiertos la máquina víctima.
 nmap -sV -p 1-10000 "$VICTIMA"
 
-# Endpoint de configuración que filtra el esquema criptográfico
+# Pedimos la página de configuración, que por error nos cuenta cómo protege los tokens.
 curl -s "http://$VICTIMA:8080/api/config"
