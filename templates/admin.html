@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Admin - Actualizaciones</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="card">
+    <h1>Carga de paquetes de actualización</h1>
+    <p>Usuario: {{ usuario }}</p>
+    <form method="post" action="/upload-update" enctype="multipart/form-data">
+      <input type="file" name="paquete">
+      <input name="firma" placeholder="Firma HMAC del paquete">
+      <button>Subir actualización</button>
+    </form>
+  </div>
+</body>
+</html>

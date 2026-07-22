@@ -18,6 +18,7 @@ vulnerable** para demostrar dos riesgos OWASP y su remediación.
 ```bash
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
+export PORTAL_SECRET='cambia-esto-por-un-secreto-largo-y-aleatorio'
 python3 init_db.py
 python3 app.py          # escucha en 0.0.0.0:8080
 ```
@@ -31,11 +32,10 @@ python3 app.py          # escucha en 0.0.0.0:8080
 
 ## Inventario de endpoints
 
-| Método | Ruta             | Descripción                    | Riesgo |
-|--------|------------------|--------------------------------|--------|
-| GET    | `/`              | Login                          | A04    |
-| POST   | `/login`         | Autenticación (MD5)            | A04    |
-| GET    | `/dashboard`     | Panel de usuario               | A04    |
-| GET    | `/api/config`    | Config expuesta al cliente     | A04    |
-| GET    | `/admin`         | Panel de carga (solo admin)    | A08    |
-| POST   | `/upload-update` | Carga de paquete `.zip`/`.tar` | A08    |
+| Método | Ruta             | Descripción                        | Seguridad                       |
+|--------|------------------|------------------------------------|---------------------------------|
+| GET    | `/`              | Login                              | —                               |
+| POST   | `/login`         | Autenticación (PBKDF2 manual)      | salt por usuario                |
+| GET    | `/dashboard`     | Panel de usuario                   | token firmado con HMAC          |
+| GET    | `/admin`         | Panel de carga (solo admin)        | —                               |
+| POST   | `/upload-update` | Carga de paquete firmado           | verifica HMAC + tipo real       |
