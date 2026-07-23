@@ -38,9 +38,11 @@ def upload_update():
 
     archivo = request.files["paquete"]
     nombre = archivo.filename
-    # Aquí lo único que revisamos es que el nombre del archivo termine en .zip o .tar, algo
-    # que el atacante controla fácil. No miramos el contenido real del archivo.
-    # Faltaría revisar de verdad qué tipo de archivo es y si es confiable.
+    # Esta es la vulnerabilidad CWE-434 (Unrestricted Upload of File with
+    # Dangerous Type): lo único que revisamos es que el nombre del archivo termine
+    # en .zip o .tar, algo que el atacante controla fácil. No miramos el contenido
+    # real del archivo. Faltaría revisar de verdad qué tipo de archivo es y si es
+    # confiable.
     if not (nombre.endswith(".zip") or nombre.endswith(".tar")):
         return render_template("upload_result.html", usuario=usuario, rol=rol, resultado="Error: Formato no permitido. Solo se aceptan archivos .zip o .tar"), 400
 

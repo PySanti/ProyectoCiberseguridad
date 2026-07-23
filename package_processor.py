@@ -19,7 +19,8 @@ def procesar_paquete(ruta):
         with zipfile.ZipFile(ruta) as z:
             z.extractall(EXTRACT_DIR)
 
-    # Y aquí está lo más grave, si el paquete trae un "update.sh", el servidor lo
+    # Y aquí está la vulnerabilidad CWE-494 (Download of Code Without Integrity
+    # Check), lo más grave: si el paquete trae un "update.sh", el servidor lo
     # ejecuta solo, confiando en que es bueno. Eso deja que el atacante corra lo
     # que quiera en el servidor. Nunca deberíamos ejecutar algo que nos llega de
     # afuera sin revisarlo antes.
