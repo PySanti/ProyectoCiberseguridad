@@ -18,7 +18,7 @@ cur.execute("INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)",
             ("operador", hash_password("operador123"), "user"))
 cur.execute("INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)",
             ("admin", hash_password("SuperAdmin2026!"), "admin"))
-# Añadimos tu usuario de pruebas habitual
+# Añadimos el usuario de pruebas habitual
 cur.execute("INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)",
             ("sebasllambi", hash_password("admin123"), "admin"))
 con.commit()

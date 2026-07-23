@@ -7,7 +7,7 @@ EXTRACT_DIR = "paquetes_extraidos"
 
 
 def verificar_integridad(datos: bytes, firma_hex: str) -> bool:
-    # Aquí comprobamos que el paquete sea de confianza: recalculamos su firma con
+    # Aquí comprobamos que el paquete sea de confianza, recalculamos su firma con
     # el secreto del servidor y la comparamos con la firma que vino con él. Solo
     # quien tiene el secreto pudo haber hecho una firma válida.
     try:

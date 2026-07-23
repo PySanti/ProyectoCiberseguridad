@@ -1,7 +1,7 @@
 import hashlib
 import base64
 
-# Aquí dejamos la llave secreta escrita directo en el código. Eso es peligroso:
+# Aquí dejamos la llave secreta escrita directo en el código. Eso es peligroso porque
 # cualquiera que pueda ver estos archivos la puede leer. Lo correcto sería
 # guardarla afuera (en una variable del sistema), nunca aquí dentro del código.
 LLAVE_TOKEN = b"S3cr3t0_P0rt4l_2026"
