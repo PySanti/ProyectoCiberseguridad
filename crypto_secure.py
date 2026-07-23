@@ -2,8 +2,9 @@ import base64
 import hashlib
 import os
 
-# Aquí leemos la llave secreta desde una variable del sistema, no del código.
-# Así no queda escrita en los archivos. Si no está configurada, la app no arranca.
+# Esto corrige la vulnerabilidad CWE-798 (Use of Hard-coded Credentials): leemos
+# la llave secreta desde una variable del sistema, no del código. Así no queda
+# escrita en los archivos. Si no está configurada, la app no arranca.
 SECRETO = os.environ.get("PORTAL_SECRET", "").encode()
 if not SECRETO:
     raise RuntimeError("Falta la variable de entorno PORTAL_SECRET")
@@ -56,8 +57,9 @@ def comparar_constante(a: bytes, b: bytes) -> bool:
 
 
 def hash_password(password: str) -> str:
-    # Aquí generamos una sal al azar y guardamos la contraseña ya protegida junto
-    # con esa sal.
+    # Esto corrige la vulnerabilidad CWE-327 (algoritmo de hash débil): en vez de
+    # MD5, generamos una sal al azar y guardamos la contraseña ya protegida junto
+    # con esa sal (usando PBKDF2, que es lento a propósito).
     salt = os.urandom(16)
     dk = pbkdf2(password.encode(), salt)
     return base64.b64encode(salt).decode() + "$" + base64.b64encode(dk).decode()
@@ -74,8 +76,9 @@ def verificar_password(password: str, almacenado: str) -> bool:
 
 
 def crear_token(usuario: str, rol: str) -> str:
-    # Aquí armamos el token y le agregamos una firma hecha con el secreto. Sin ese
-    # secreto, nadie puede fabricar un token válido.
+    # Esto también corrige la vulnerabilidad CWE-327: armamos el token y le
+    # agregamos una firma hecha con el secreto. Sin ese secreto, nadie puede
+    # fabricar un token válido, así que ya no se puede alterar como antes.
     payload = f"{usuario}|{rol}".encode()
     firma = hmac_sha256(SECRETO, payload)
     return base64.b64encode(payload).decode() + "." + base64.b64encode(firma).decode()

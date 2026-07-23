@@ -7,9 +7,10 @@ EXTRACT_DIR = "paquetes_extraidos"
 
 
 def verificar_integridad(datos: bytes, firma_hex: str) -> bool:
-    # Aquí comprobamos que el paquete sea de confianza, recalculamos su firma con
-    # el secreto del servidor y la comparamos con la firma que vino con él. Solo
-    # quien tiene el secreto pudo haber hecho una firma válida.
+    # Esto corrige la vulnerabilidad CWE-494 (Download of Code Without Integrity
+    # Check): comprobamos que el paquete sea de confianza, recalculamos su firma
+    # con el secreto del servidor y la comparamos con la firma que vino con él.
+    # Solo quien tiene el secreto pudo haber hecho una firma válida.
     try:
         esperado = hmac_sha256(SECRETO, datos)
         return comparar_constante(esperado, bytes.fromhex(firma_hex))
@@ -18,8 +19,9 @@ def verificar_integridad(datos: bytes, firma_hex: str) -> bool:
 
 
 def _tipo_real_valido(ruta: str) -> bool:
-    # Aquí miramos el contenido real del archivo (sus primeros bytes) para saber
-    # si de verdad es un .zip o un .tar, sin fiarnos del nombre.
+    # Esto corrige la vulnerabilidad CWE-434 (Unrestricted Upload of File with
+    # Dangerous Type): miramos el contenido real del archivo (sus primeros bytes)
+    # para saber si de verdad es un .zip o un .tar, sin fiarnos del nombre.
     with open(ruta, "rb") as f:
         cabecera = f.read(6)
     es_zip = cabecera[:4] == b"PK\x03\x04"

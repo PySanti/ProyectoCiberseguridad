@@ -66,6 +66,10 @@ def dashboard():
     return render_template("dashboard.html", usuario=usuario, rol=rol)
 
 
+# Esto corrige la vulnerabilidad CWE-200 (Exposure of Sensitive Information):
+# quitamos la ruta /api/config que había en la versión vulnerable. Antes filtraba
+# cómo se armaba el token, el método de las contraseñas y una pista de la llave;
+# ahora simplemente ya no existe, así que no le damos esa información al atacante.
 @auth_bp.route("/download/<path:filename>")
 def download_fake(filename):
     contenido = f"¡Felicidades! Has encontrado un easter egg.\n\nEste archivo '{filename}' es un firmware ficticio para pruebas de ciberseguridad en el portal UCAB HARDWARE."
