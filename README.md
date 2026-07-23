@@ -8,7 +8,7 @@ protege.
 La app simula un portal donde se suben "actualizaciones" (paquetes de archivos), con
 su login y su panel de administrador.
 
-## Qué fallas tiene
+## Qué riesgos presenta
 
 Metimos dos fallas del estándar OWASP:
 

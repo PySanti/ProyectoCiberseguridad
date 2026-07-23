@@ -1,7 +1,7 @@
 import hashlib
 import base64
 
-# Aquí dejamos la llave secreta escrita directo en el código. Eso es peligroso:
+# Aquí dejamos la llave secreta escrita directo en el código. Eso es peligroso porque
 # cualquiera que pueda ver estos archivos la puede leer. Lo correcto sería
 # guardarla afuera (en una variable del sistema), nunca aquí dentro del código.
 LLAVE_TOKEN = b"S3cr3t0_P0rt4l_2026"
@@ -21,7 +21,7 @@ def _xor(data: bytes, key: bytes) -> bytes:
 
 def crear_token(usuario: str, rol: str) -> str:
     # Aquí armamos el token mezclando los datos con la llave y codificándolos. El
-    # problema es que esa mezcla se puede deshacer: el usuario podría abrir el
+    # problema es que esa mezcla se puede deshacer, por lo que el usuario podría abrir el
     # token, cambiar "user" por "admin" y volverlo a armar. Faltaría firmarlo
     # para que nadie lo pueda modificar sin que nos demos cuenta.
     payload = f"{usuario}|{rol}".encode()

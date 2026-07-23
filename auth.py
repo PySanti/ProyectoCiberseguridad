@@ -62,7 +62,7 @@ def dashboard():
 
 @auth_bp.route("/api/config")
 def api_config():
-    # Aquí, por error, le mostramos al cliente cómo funciona la app por dentro:
+    # Aquí, por error, le mostramos al cliente cómo funciona la app por dentro,
     # cómo se arma el token, qué método usa para las contraseñas y una pista de
     # la llave. Eso le da al atacante justo lo que necesita para atacarnos. No
     # deberíamos mostrar nada de esto.

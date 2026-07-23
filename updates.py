@@ -38,7 +38,7 @@ def upload_update():
 
     archivo = request.files["paquete"]
     nombre = archivo.filename
-    # Aquí lo único que revisamos es que el nombre termine en .zip o .tar, algo
+    # Aquí lo único que revisamos es que el nombre del archivo termine en .zip o .tar, algo
     # que el atacante controla fácil. No miramos el contenido real del archivo.
     # Faltaría revisar de verdad qué tipo de archivo es y si es confiable.
     if not (nombre.endswith(".zip") or nombre.endswith(".tar")):

@@ -6,7 +6,7 @@ import hashlib
 con = sqlite3.connect("portal.db")
 filas = con.execute("SELECT usuario, password, rol FROM usuarios").fetchall()
 
-# Probamos una lista de contraseñas comunes: convertimos cada una con MD5 y la
+# Probamos una lista de contraseñas comunes, convertimos cada una con MD5 y la
 # comparamos con las guardadas. Como la app usa MD5 sin sal, esto es rapidísimo,
 # y por eso robar la base de datos es tan grave. En la demo se puede usar una
 # lista grande (rockyou.txt); aquí va una corta.
